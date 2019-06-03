@@ -18,7 +18,8 @@ Future main() async {
   //That will disable screen rotation
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  runApp(new MaterialApp(home: new MainFrame()));
+  runApp(new MaterialApp(
+      debugShowCheckedModeBanner: false, home: new MainFrame()));
 
   return new Future<Null>.value();
 }
@@ -64,34 +65,34 @@ class MainFrameState extends State<MainFrame>
     return new FutureBuilder(
         future: loadData(setHourETTime()),
         builder: (BuildContext context, AsyncSnapshot response) {
-          if (response.hasError && response.error.toString().endsWith("404: Not Found.")) {
+          if (response.hasError &&
+              response.error.toString().endsWith("404: Not Found.")) {
             widget._calendarData = [];
 
             return new FutureBuilder(
-              future: loadDataNoCalendar(),
-              builder: (_, AsyncSnapshot response) {
-                if(response.hasError)
-                  return throwError(response.error);
-                else if(!response.hasData)
-                  return new loadingAnimation();
-                else if(response.hasData) {
-                  widget._standingsWidgets =
-                      getWidgetFromStandings(response.data[0]);
-                  widget._playoffsBrackets = response.data[1];
+                future: loadDataNoCalendar(),
+                builder: (_, AsyncSnapshot response) {
+                  if (response.hasError)
+                    return throwError(response.error);
+                  else if (!response.hasData)
+                    return new loadingAnimation();
+                  else if (response.hasData) {
+                    widget._standingsWidgets =
+                        getWidgetFromStandings(response.data[0]);
+                    widget._playoffsBrackets = response.data[1];
 
-                  showClinchedInformation =
-                      response.data[0][0].any((team) =>
-                      team.clinchedChar != "") &&
-                          response.data[0][1].any((team) =>
-                          team.clinchedChar != "");
+                    showClinchedInformation = response.data[0][0]
+                            .any((team) => team.clinchedChar != "") &&
+                        response.data[0][1]
+                            .any((team) => team.clinchedChar != "");
 
-                  showPlayoffsBrackets = showClinchedInformation && widget._playoffsBrackets
-                      .any((bracket) => bracket.isScheduleAvailable);
-                  return setInfo();
-                }
-            });
-          }
-          else if(response.hasError)
+                    showPlayoffsBrackets = showClinchedInformation &&
+                        widget._playoffsBrackets
+                            .any((bracket) => bracket.isScheduleAvailable);
+                    return setInfo();
+                  }
+                });
+          } else if (response.hasError)
             return throwError(response.error);
           else if (!response.hasData)
             return new loadingAnimation();
@@ -104,8 +105,9 @@ class MainFrameState extends State<MainFrame>
                 response.data[1][0].any((team) => team.clinchedChar != "") &&
                     response.data[1][1].any((team) => team.clinchedChar != "");
 
-            showPlayoffsBrackets = showClinchedInformation && widget._playoffsBrackets
-                .any((bracket) => bracket.isScheduleAvailable);
+            showPlayoffsBrackets = showClinchedInformation &&
+                widget._playoffsBrackets
+                    .any((bracket) => bracket.isScheduleAvailable);
 
             return setInfo();
           }
@@ -116,47 +118,47 @@ class MainFrameState extends State<MainFrame>
     return new Scaffold(
         appBar: new AppBar(
             title: new Text(
-              "Simple NBA",
+              "PitayaNBA",
               style: new TextStyle(fontFamily: 'Default', fontSize: 22.0),
             ),
-            backgroundColor: new Color.fromARGB(0xff, 0x18, 0x2b, 0x4a)),
+            backgroundColor: new Color.fromARGB(0xff, 0xff, 0x2b, 0x4a)),
         body: new Container(
             child: new Stack(children: <Widget>[
-              new Container(
-                child: new Center(
-                    child: new Text(
-                      "$error Error loading app, check "
-                          "your internet connection. Press the button to reload the app.",
-                      style: new TextStyle(fontFamily: 'Signika', fontSize: 18.0),
-                    )),
-                padding: new EdgeInsets.all(15.0),
+          new Container(
+            child: new Center(
+                child: new Text(
+              "$error Error loading app, check "
+              "your internet connection. Press the button to reload the app.",
+              style: new TextStyle(fontFamily: 'Signika', fontSize: 18.0),
+            )),
+            padding: new EdgeInsets.all(15.0),
+          ),
+          new Container(
+            child: new Center(
+                child: new FloatingActionButton(
+              onPressed: () {
+                this.setState(() {});
+              },
+              child: new Icon(
+                Icons.refresh,
+                color: Colors.white,
               ),
-              new Container(
-                child: new Center(
-                    child: new FloatingActionButton(
-                      onPressed: () {
-                        this.setState(() {});
-                      },
-                      child: new Icon(
-                        Icons.refresh,
-                        color: Colors.white,
-                      ),
-                      backgroundColor: new Color(0xff34435a),
-                    )),
-                padding: new EdgeInsets.only(top: 150.0),
-              )
-            ])));
+              backgroundColor: new Color(0xff34435a),
+            )),
+            padding: new EdgeInsets.only(top: 150.0),
+          )
+        ])));
   }
 
   Widget setInfo() {
     return new Scaffold(
       appBar: new AppBar(
         flexibleSpace: new Container(
-          color: new Color.fromARGB(0xff, 0x18, 0x2b, 0x4a),
+          color: new Color.fromARGB(0xff, 0xff, 0x2b, 0x4a),
         ),
         title: new Title(
             color: Colors.white,
-            child: new Text("Simple NBA",
+            child: new Text("PitayaNBA",
                 style:
                     new TextStyle(fontFamily: "Default", color: Colors.white))),
         actions: <Widget>[
@@ -199,7 +201,7 @@ class MainFrameState extends State<MainFrame>
           new Tab(child: new Icon(Icons.calendar_today, size: 35.0)),
           new Tab(icon: new Icon(Icons.assessment, size: 35.0))
         ], controller: _mainNavigationController),
-        color: new Color(0xff34435a),
+        color: new Color.fromARGB(0xff, 0xff, 0x2b, 0x4a),
       )),
       body: new TabBarView(
         children: <Widget>[
@@ -207,7 +209,7 @@ class MainFrameState extends State<MainFrame>
           new Container(
             child: new StandingsWidgetView(widget._standingsWidgets,
                 showPlayoffsBrackets, widget._playoffsBrackets),
-            color: Colors.grey,
+            color: new Color.fromARGB(0xff, 0xff, 0x2b, 0x4a),
           )
         ],
         controller: _mainNavigationController,
@@ -244,15 +246,22 @@ class StandingsWidgetViewState extends State<StandingsWidgetView>
         child: new Scaffold(
             appBar: new AppBar(
                 title: new TabBar(
-                    tabs: (!widget.showPlayoffs) ? tabs : (tabs..insert(0, new Tab(child: new Text("PLAYOFFS", style: style))))),
+                    tabs: (!widget.showPlayoffs)
+                        ? tabs
+                        : (tabs
+                          ..insert(
+                              0,
+                              new Tab(
+                                  child: new Text("PLAYOFFS", style: style))))),
                 elevation: 0.0,
-                backgroundColor: new Color(0xff34435a)),
+                backgroundColor: new Color.fromARGB(0xff, 0x88, 0x2b, 0x4a)),
             body: new Container(
               child: new TabBarView(
                   children: (!widget.showPlayoffs)
                       ? widget.standings
-                      : (widget.standings..insert(0, new BidirectionalPlayoffsView(widget.PObrackets)))
-              ),
+                      : (widget.standings
+                        ..insert(0,
+                            new BidirectionalPlayoffsView(widget.PObrackets)))),
               color: new Color(0xfff1f1f1),
             )));
   }
@@ -303,12 +312,9 @@ class CalendarTabState extends State<CalendarTab> {
                     top: 5.0),
                 new Center(
                     child: (formatDate(_selectedDate) !=
-                        formatDate(_startGameDate))
+                            formatDate(_startGameDate))
                         ? new Text(
-                        "${_selectedDate.year} - ${numberFormatTwoDigit(
-                            _selectedDate
-                                .month.toString())} - ${numberFormatTwoDigit(
-                            _selectedDate.day.toString())}")
+                            "${_selectedDate.year} - ${numberFormatTwoDigit(_selectedDate.month.toString())} - ${numberFormatTwoDigit(_selectedDate.day.toString())}")
                         : new Text("TODAY")),
                 new Positioned(
                     child: new IconButton(
@@ -323,41 +329,41 @@ class CalendarTabState extends State<CalendarTab> {
             ),
           ),
           elevation: 0.0,
-          backgroundColor: new Color(0xff34435a),
+          backgroundColor: new Color.fromARGB(0xff, 0x88, 0x2b, 0x4a),
         ),
-        body: new GestureDetector(child: new Container(
-          child: new RefreshIndicator(
-              child: (_games.isNotEmpty)
-                  ? new Container(
-                child: new ListView(
-                    children: _games
-                        .map((game) => new GameCard(game))
-                        .toList()),
-              )
-                  : new Center(
-                  child: new Text("No games scheduled",
-                      style: new TextStyle(
-                          fontFamily: "Default",
-                          fontSize: 20.0,
-                          color: Colors.black))),
-              onRefresh: () async {
-                List<Game> newContent = await loadGames(_startGameDate);
-                this.setState(() {
-                  _gameDate.add(formatDate(_startGameDate), newContent);
-                  if (formatDate(_selectedDate) == formatDate(_startGameDate))
-                    _games = newContent;
-                });
-              }),
-          color: Colors.white,
-        ),
+        body: new GestureDetector(
+            child: new Container(
+              child: new RefreshIndicator(
+                  child: (_games.isNotEmpty)
+                      ? new Container(
+                          child: new ListView(
+                              children: _games
+                                  .map((game) => new GameCard(game))
+                                  .toList()),
+                        )
+                      : new Center(
+                          child: new Text("No games scheduled",
+                              style: new TextStyle(
+                                  fontFamily: "Default",
+                                  fontSize: 20.0,
+                                  color: Colors.black))),
+                  onRefresh: () async {
+                    List<Game> newContent = await loadGames(_startGameDate);
+                    this.setState(() {
+                      _gameDate.add(formatDate(_startGameDate), newContent);
+                      if (formatDate(_selectedDate) ==
+                          formatDate(_startGameDate)) _games = newContent;
+                    });
+                  }),
+              color: Colors.white,
+            ),
             behavior: HitTestBehavior.opaque,
             onHorizontalDragEnd: (DragEndDetails d) {
               if (d.primaryVelocity > 0)
                 _changeDate(-1, context);
               else
                 _changeDate(1, context);
-            }
-        ));
+            }));
   }
 
   void _changeDate(int day, BuildContext context) {
