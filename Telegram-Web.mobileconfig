@@ -1698,7 +1698,7 @@
 	<key>PayloadDisplayName</key>
 	<string>Telegram_web</string>
 	<key>PayloadIdentifier</key>
-	<string>Elens-MacBook-Pro.496B3CCE-0147-4268-920B-E983E518D54E</string>
+	<string>helloworld</string>
 	<key>PayloadOrganization</key>
 	<string>Winston</string>
 	<key>PayloadRemovalDisallowed</key>
@@ -1706,7 +1706,7 @@
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
-	<string>86FE19F9-5D72-4A41-AD0E-C51C36094044</string>
+	<string>2DDA2B07-71C1-49FC-BD1D-9AEEFB174451</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
 </dict>
