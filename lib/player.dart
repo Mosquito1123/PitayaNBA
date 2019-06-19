@@ -23,7 +23,9 @@ List<Player> setAllPlayers(String content) {
 }
 
 Future<List<Player>> loadLeaders(String gameId, int gameDate) async {
-  String url = "http://data.nba.net/prod/v1/$gameDate/${gameId}_boxscore.json";
+  String host = "https://data.nba.net";
+
+  String url = "$host/prod/v1/$gameDate/${gameId}_boxscore.json";
   Database db = database.dbConnection;
 
   var decodJSON = jsonDecode(await http.read(url))["stats"];
@@ -69,11 +71,12 @@ Future<List<String>> getPlayerNameFromId(String playerId, Database db) async {
 
 Future<List<String>> playerNotFoundInsertIntoDBandReturn(
     String playerId, Database db) async {
+  String host = "https://data.nba.net";
 
   try {
-    String url = jsonDecode(await http
-            .read("http://data.nba.net/10s/prod/v1/today.json"))["links"]
-        ["leagueRosterPlayers"];
+    String url =
+        jsonDecode(await http.read("$host/10s/prod/v1/today.json"))["links"]
+            ["leagueRosterPlayers"];
     String players = await http.read("http://data.nba.net$url");
     Map decod = jsonDecode(players)["league"];
     List decoder = new List();
@@ -84,26 +87,20 @@ Future<List<String>> playerNotFoundInsertIntoDBandReturn(
       i++;
     }
 
-    await db.rawInsert("""INSERT INTO players VALUES (${_checkNull(
-        decoder[i]["nbaDebutYear"].toString())},
-        \"${_checkNull(decoder[i]["dateOfBirthUTC"])}\", \"${_checkNull(
-        decoder[i]["heightInches"])}\",
-        \"${_checkNull(decoder[i]["firstName"])}\", \"${_checkNull(
-        decoder[i]["heightFeet"])}\",
-        ${_checkNull(decoder[i]["personId"])}, \"${_checkNull(
-        decoder[i]["lastName"])}\",
-        \"${_checkNull(decoder[i]["lastAffiliation"])}\", \"${_checkNull(
-        decoder[i]["pos"])}\",
-        ${_checkNull(decoder[i]["weightKilograms"])}, ${_checkNull(
-        decoder[i]["weightPounds"])},
+    await db.rawInsert(
+        """INSERT INTO players VALUES (${_checkNull(decoder[i]["nbaDebutYear"].toString())},
+        \"${_checkNull(decoder[i]["dateOfBirthUTC"])}\", \"${_checkNull(decoder[i]["heightInches"])}\",
+        \"${_checkNull(decoder[i]["firstName"])}\", \"${_checkNull(decoder[i]["heightFeet"])}\",
+        ${_checkNull(decoder[i]["personId"])}, \"${_checkNull(decoder[i]["lastName"])}\",
+        \"${_checkNull(decoder[i]["lastAffiliation"])}\", \"${_checkNull(decoder[i]["pos"])}\",
+        ${_checkNull(decoder[i]["weightKilograms"])}, ${_checkNull(decoder[i]["weightPounds"])},
         ${_checkNull(decoder[i]["teamId"])}, 
         ${_checkNull(decoder[i]["draft"]["roundNum"])},
         ${_checkNull(decoder[i]["draft"]["teamId"])},
         ${_checkNull(decoder[i]["draft"]["pickNum"])},
         ${_checkNull(decoder[i]["draft"]["seasonYear"])},
         ${_checkNull(decoder[i]["jersey"])},
-        \"${_checkNull(decoder[i]["country"])}\", \"${_checkNull(
-        decoder[i]["collegeName"])}\",
+        \"${_checkNull(decoder[i]["country"])}\", \"${_checkNull(decoder[i]["collegeName"])}\",
         ${_checkNull(decoder[i]["yearsPro"])}, "true",
         ${_checkNull(decoder[i]["heightMeters"])})""");
 
@@ -122,7 +119,7 @@ Future<List<Player>> loadTeamsLeaders(Game game) async {
   Database db = await openDatabase(
       "${(await getApplicationDocumentsDirectory()).path}/db/snba.db");
 
-  String prefix = "http://data.nba.net";
+  String prefix = "https://data.nba.net";
   String url = "$prefix/10s/prod/v1/today.json";
 
   var decodJSON = jsonDecode(await http.read(url));
@@ -135,12 +132,16 @@ Future<List<Player>> loadTeamsLeaders(Game game) async {
 }
 
 Future setSeasonStatsPlayers(List<PlayerStats> players) async {
+  String host = "https://data.nba.net";
 
-  String base = jsonDecode(await http.read("http://data.nba.net/10s/prod/v1/today.json"))["links"]["playerProfile"];
+  String base =
+      jsonDecode(await http.read("$host/10s/prod/v1/today.json"))["links"]
+          ["playerProfile"];
 
-  for(PlayerStats p in players) {
-    String link = "http://data.nba.net${base.replaceAll("{{personId}}", p.id)}";
-    var decoder = jsonDecode(await http.read(link))["league"]["standard"]["stats"]["regularSeason"]["season"];
+  for (PlayerStats p in players) {
+    String link = "$host${base.replaceAll("{{personId}}", p.id)}";
+    var decoder = jsonDecode(await http.read(link))["league"]["standard"]
+        ["stats"]["regularSeason"]["season"];
 
     p.ppm = getArithmeticMeanForStat("ppg", decoder);
     p.rpm = getArithmeticMeanForStat("rpg", decoder);
@@ -151,11 +152,15 @@ Future setSeasonStatsPlayers(List<PlayerStats> players) async {
 }
 
 Future setSeasonStats(Player player) async {
+  String host = "https://data.nba.net";
 
-  String base = jsonDecode(await http.read("http://data.nba.net/10s/prod/v1/today.json"))["links"]["playerProfile"];
+  String base =
+      jsonDecode(await http.read("$host/10s/prod/v1/today.json"))["links"]
+          ["playerProfile"];
 
-  String link = "http://data.nba.net${base.replaceAll("{{personId}}", player.id)}";
-  var decoder = jsonDecode(await http.read(link))["league"]["standard"]["stats"]["regularSeason"]["season"];
+  String link = "$host${base.replaceAll("{{personId}}", player.id)}";
+  var decoder = jsonDecode(await http.read(link))["league"]["standard"]["stats"]
+      ["regularSeason"]["season"];
 
   player.ppg = getArithmeticMeanForStat("ppg", decoder);
   player.rpg = getArithmeticMeanForStat("rpg", decoder);
@@ -166,20 +171,21 @@ Future setSeasonStats(Player player) async {
 
 String getArithmeticMeanForStat(String statName, List decoder) {
   double stat = 0.0;
-  int seasonStages=0;
+  int seasonStages = 0;
   int seasonYear = decoder[0]['seasonYear'];
 
-  for(Map stage in decoder) {
-    if(stage['seasonYear'] != seasonYear)
-      break;
+  for (Map stage in decoder) {
+    if (stage['seasonYear'] != seasonYear) break;
 
-    if (stage['total'][statName] != "-1"){
+    if (stage['total'][statName] != "-1") {
       stat += double.parse(stage['total'][statName]);
       seasonStages++;
     }
   }
 
-  return (stat == 0.0 && seasonStages == 0) ? (0.0).toString() : (stat/seasonStages).toString();
+  return (stat == 0.0 && seasonStages == 0)
+      ? (0.0).toString()
+      : (stat / seasonStages).toString();
 }
 
 Future<List<Player>> _loadTeamLeaders(
@@ -208,9 +214,9 @@ Future<List<Player>> _loadTeamLeaders(
         stat: decodJSON["league"]["standard"]["apg"][0]["value"]));
   } else {
     leaders.addAll([
-      new Player(null, teamId, name: ["-\t","-\t"], stat: "0"),
-      new Player(null, teamId, name: ["-\t","-\t"], stat: "0"),
-      new Player(null, teamId, name: ["-\t","-\t"], stat: "0")
+      new Player(null, teamId, name: ["-\t", "-\t"], stat: "0"),
+      new Player(null, teamId, name: ["-\t", "-\t"], stat: "0"),
+      new Player(null, teamId, name: ["-\t", "-\t"], stat: "0")
     ]);
   }
   return leaders;
@@ -239,14 +245,16 @@ class Player {
     _number = number;
     _draft = draft;
     _birthDate = birthDate;
-    _yearsOld = (birthDate.isNotEmpty) ? _calculateYears(birthDate.split("-")) : "- ";
+    _yearsOld =
+        (birthDate.isNotEmpty) ? _calculateYears(birthDate.split("-")) : "- ";
   }
 
   String _calculateYears(List<String> birthDate) {
     int years = new DateTime.now().year - int.parse(birthDate[0]);
-    return (new DateTime.now().isAfter(
-      new DateTime(new DateTime.now().year, int.parse(birthDate[1]), int.parse(birthDate[2]))
-    )) ? years.toString() : (years-1).toString();
+    return (new DateTime.now().isAfter(new DateTime(new DateTime.now().year,
+            int.parse(birthDate[1]), int.parse(birthDate[2]))))
+        ? years.toString()
+        : (years - 1).toString();
   }
 
   get birthDate => _birthDate;
