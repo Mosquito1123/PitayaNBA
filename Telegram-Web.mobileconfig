@@ -1674,7 +1674,7 @@
 			<key>IsRemovable</key>
 			<false/>
 			<key>Label</key>
-			<string>WebTelegram</string>
+			<string>Web.Telegram</string>
 			<key>PayloadDescription</key>
 			<string>配置 Web Clip 设置</string>
 			<key>PayloadDisplayName</key>
@@ -1694,9 +1694,9 @@
 		</dict>
 	</array>
 	<key>PayloadDescription</key>
-	<string>This is a simple web clip for telegram</string>
+	<string>This is a simple web clip for telegram.FuckYou</string>
 	<key>PayloadDisplayName</key>
-	<string>Telegram_web</string>
+	<string>FuckYou</string>
 	<key>PayloadIdentifier</key>
 	<string>helloworld</string>
 	<key>PayloadOrganization</key>
@@ -1708,6 +1708,6 @@
 	<key>PayloadUUID</key>
 	<string>2DDA2B07-71C1-49FC-BD1D-9AEEFB174451</string>
 	<key>PayloadVersion</key>
-	<integer>1</integer>
+	<integer>2</integer>
 </dict>
 </plist>
