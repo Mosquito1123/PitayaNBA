@@ -12,43 +12,6 @@
 	<key>PayloadContent</key>
 	<array>
 		<dict>
-			<key>IPSec</key>
-			<dict>
-				<key>AuthenticationMethod</key>
-				<string>SharedSecret</string>
-				<key>LocalIdentifierType</key>
-				<string>KeyID</string>
-			</dict>
-			<key>IPv4</key>
-			<dict>
-				<key>OverridePrimary</key>
-				<integer>0</integer>
-			</dict>
-			<key>PPP</key>
-			<dict/>
-			<key>PayloadDescription</key>
-			<string>配置 VPN 设置</string>
-			<key>PayloadDisplayName</key>
-			<string>VPN</string>
-			<key>PayloadIdentifier</key>
-			<string>com.apple.vpn.managed.E4D310F0-9A98-4B8D-8BC6-9F5061286228</string>
-			<key>PayloadType</key>
-			<string>com.apple.vpn.managed</string>
-			<key>PayloadUUID</key>
-			<string>E4D310F0-9A98-4B8D-8BC6-9F5061286228</string>
-			<key>PayloadVersion</key>
-			<integer>1</integer>
-			<key>Proxies</key>
-			<dict>
-				<key>HTTPEnable</key>
-				<integer>0</integer>
-				<key>HTTPSEnable</key>
-				<integer>0</integer>
-			</dict>
-			<key>VPNType</key>
-			<string>L2TP</string>
-		</dict>
-		<dict>
 			<key>FullScreen</key>
 			<true/>
 			<key>Icon</key>
@@ -1743,7 +1706,7 @@
 	<key>PayloadType</key>
 	<string>Configuration</string>
 	<key>PayloadUUID</key>
-	<string>C78D4728-9C1D-467C-8D46-9A9D6352EFB8</string>
+	<string>86FE19F9-5D72-4A41-AD0E-C51C36094044</string>
 	<key>PayloadVersion</key>
 	<integer>1</integer>
 </dict>
